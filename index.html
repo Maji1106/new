@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matching Entrepreneurs with Interns</title>
+    <style>
+        .matches-container {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+        .match-card {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px;
+            width: 200px;
+            text-align: center;
+        }
+        .match-card img {
+            width: 100px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>ตามหาเด็กฝึกงาน</h1>
+    <button onclick="addEntrepreneur()">เพิ่ม Entrepreneur</button>
+    <button onclick="addIntern()">เพิ่ม Intern</button>
+    <button onclick="randomizeMatches()">สุ่มคู่ใหม่</button>
+    <div id="matches"></div>
+
+    <script>
+        let entrepreneurs = [
+            { name: "สีประทุม", expertise: ["Marketing", "Finance"], image: "https://6ix-studio.com/wp-content/uploads/2022/07/Logo_Design-24-1024x1024.png" },
+            { name: "สระลงแรง", expertise: ["Technology", "Engineering"], image: "https://png.pngtree.com/png-vector/20190322/ourlarge/pngtree-wings-company-logo-vector-template-design-illustration-png-image_859669.jpg" }
+        ];
+
+        let interns = [
+            { name: "Alice Johnson", interest: ["Marketing", "Finance"], image: "https://images.generated.photos/T3iY06y1kw0kclL1CSdOZ-g6s5lllulW40ekpV6wSDU/rs:fit:256:256/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LnBob3Rvcy92M18w/MzYzOTQyLmpwZw.jpg", matched: false },
+            { name: "Bob Williams", interest: ["Technology", "Engineering"], image: "https://images.generated.photos/VeuGeJOlaNeFXLYdiXWyjy3E5WQAmgaz4pUj-TbaApk/rs:fit:256:256/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LnBob3Rvcy92M18w/OTA3ODk0LmpwZw.jpg", matched: false },
+            { name: "Ali Jon", interest: ["Marketing", "Finance"], image: "https://images.generated.photos/VeuGeJOlaNeFXLYdiXWyjy3E5WQAmgaz4pUj-TbaApk/rs:fit:256:256/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LnBob3Rvcy92M18w/OTA3ODk0LmpwZw.jpg", matched: false },
+            { name: "Bno iams", interest: ["Technology", "Engineering"], image: "https://images.generated.photos/USmeji3cX0aKfctySEBwCN2u-G2ltz4w3yAsOS8JYDk/rs:fit:256:256/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LnBob3Rvcy92M18w/NTI4NDE3LmpwZw.jpg", matched: false },
+            { name: "Sophia Martinez", interest: ["Marketing", "Finance"], image: "https://images.generated.photos/VRKsQACZyrAFz-EL3xA4vqOEegN6NtvA20v2Ey48U8w/rs:fit:256:256/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LnBob3Rvcy92M18w/NzM2NDQzLmpwZw.jpg", matched: false },
+            { name: "Bob Williams", interest: ["Technology", "Engineering"], image: "https://images.generated.photos/vJMQk--It5FNle80m5ydxcLIzp_uIO0fmTq449GIV3s/rs:fit:256:256/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LnBob3Rvcy92M18w/MDgzMDIyLmpwZw.jpg", matched: false },
+            { name: "William Anderson", interest: ["Marketing", "Finance"], image: "https://images.generated.photos/9fFuwGjFOvPuSMRYgSmKjTFc8uK6hNLbzli8HamFZiA/rs:fit:256:256/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LnBob3Rvcy92M18w/NDc3MjQ5LmpwZw.jpg", matched: false },
+           
+     
+        ];
+
+        function matchEntrepreneursWithInterns() {
+            const matches = [];
+            entrepreneurs.forEach(entrepreneur => {
+                const availableInterns = interns.filter(intern => !intern.matched);
+                if (availableInterns.length > 0) {
+                    const randomIndex = Math.floor(Math.random() * availableInterns.length);
+                    const randomIntern = availableInterns[randomIndex];
+                    randomIntern.matched = true;
+                    matches.push({ entrepreneur: entrepreneur, intern: randomIntern });
+                }
+            });
+            return matches;
+        }
+
+        function displayMatches() {
+            const matchedPairs = matchEntrepreneursWithInterns();
+            const matchesContainer = document.getElementById('matches');
+            matchesContainer.innerHTML = ''; // Clear ข้อมูลเดิมก่อนแสดงผล
+            matchedPairs.forEach(pair => {
+                const matchElement = document.createElement('div');
+                matchElement.classList.add('matches-container');
+
+                // สร้าง Element สำหรับผู้ประกอบการ
+                const entrepreneurCard = document.createElement('div');
+                entrepreneurCard.classList.add('match-card');
+                entrepreneurCard.innerHTML = `
+                    <img src="${pair.entrepreneur.image}" alt="${pair.entrepreneur.name}">
+                    <p>${pair.entrepreneur.name}</p>
+                    <p>Expertise: ${pair.entrepreneur.expertise.join(', ')}</p>
+                `;
+                matchElement.appendChild(entrepreneurCard);
+
+                // สร้าง Element สำหรับนักศึกษาฝึกงาน
+                const internCard = document.createElement('div');
+                internCard.classList.add('match-card');
+                internCard.innerHTML = `
+                    <img src="${pair.intern.image}" alt="${pair.intern.name}">
+                    <p>${pair.intern.name}</p>
+                    <p>Interest: ${pair.intern.interest.join(', ')}</p>
+                `;
+                matchElement.appendChild(internCard);
+
+                matchesContainer.appendChild(matchElement);
+            });
+        }
+
+        function addEntrepreneur() {
+            const name = prompt("ชื่อ Entrepreneur:");
+            const expertise = prompt("ความถนัด (โปรดระบุคั่นด้วยเครื่องหมายคอมม่า):").split(',');
+            const image = prompt("URL รูปภาพของ Entrepreneur:");
+            entrepreneurs.push({ name: name, expertise: expertise, image: image });
+            displayMatches();
+        }
+
+        function addIntern() {
+            const name = prompt("ชื่อ Intern:");
+            const interest = prompt("ความสนใจ (โปรดระบุคั่นด้วยเครื่องหมายคอมม่า):").split(',');
+            const image = prompt("URL รูปภาพของ Intern:");
+            interns.push({ name: name, interest: interest, image: image, matched: false });
+            displayMatches();
+        }
+
+        function randomizeMatches() {
+            interns.forEach(intern => intern.matched = false);
+            displayMatches();
+        }
+
+        displayMatches(); // แสดงผลลัพธ์เริ่มต้น
+    </script>
+</body>
+</html>
